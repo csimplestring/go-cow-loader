@@ -43,7 +43,7 @@ go-build:
 
 go-test:
 	@echo "  >  Running tests..."
-	go test -v ./... -cover
+	go test -race -v ./... -cover
 
 go-bench:
 	@echo "  >  Running benchmarks..."
