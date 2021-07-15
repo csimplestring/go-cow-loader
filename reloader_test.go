@@ -53,6 +53,16 @@ func Test_Reloader(t *testing.T) {
 	c := &cowArray{}
 	r := New(c, 1)
 	go r.Start()
+	errChan := r.Err()
+
+	go func() {
+		for {
+			select {
+			case err := <-errChan:
+				t.Error(err)
+			}
+		}
+	}()
 
 	go func() {
 		for {

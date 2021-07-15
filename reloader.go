@@ -45,16 +45,18 @@ func (o *opBuffer) flush() []Op {
 }
 
 type Reloader struct {
-	ticker *time.Ticker
-	ops    *opBuffer
-	atom   atomic.Value
+	ticker  *time.Ticker
+	ops     *opBuffer
+	atom    atomic.Value
+	errChan chan error
 }
 
 func New(v Value, freshFreq int) *Reloader {
 	r := &Reloader{
-		ticker: time.NewTicker(time.Second * time.Duration(freshFreq)),
-		ops:    newOpBuffer(),
-		atom:   atomic.Value{},
+		ticker:  time.NewTicker(time.Second * time.Duration(freshFreq)),
+		ops:     newOpBuffer(),
+		atom:    atomic.Value{},
+		errChan: make(chan error),
 	}
 
 	r.atom.Store(v)
@@ -71,6 +73,10 @@ func (r *Reloader) Accept(op Op) error {
 	return nil
 }
 
+func (r *Reloader) Err() <-chan error {
+	return r.errChan
+}
+
 func (r *Reloader) Start() {
 	for {
 		select {
@@ -79,7 +85,9 @@ func (r *Reloader) Start() {
 			v := r.atom.Load().(Value)
 			v2 := v.Copy()
 
-			v2.Apply(ops)
+			if err := v2.Apply(ops); err != nil {
+				r.errChan <- err
+			}
 
 			r.atom.Store(v2)
 		}
