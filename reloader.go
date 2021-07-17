@@ -15,8 +15,7 @@ type Op interface {
 // Value provides 2 functions in order to fulfill the copy-on-write:
 // Copy() will deep-copy the value itself, this is important because if a pointer is still shared or shadow
 // copied, the old value won't be GC.
-// Apply() will apply the modification ops, whether in a sequential order or arbitrary order, depends on the
-// value implementation. This reload can not guarantee anything.
+// Apply() will apply the modification ops on the new value in the order as it is.
 type Value interface {
 	Copy() Value
 	Apply(ops []Op) error

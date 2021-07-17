@@ -67,21 +67,15 @@ func Test_Reloader(t *testing.T) {
 	for i := 0; i < 100; i++ {
 		go func() {
 			for {
-				time.Sleep(500 * time.Millisecond)
+				time.Sleep(1 * time.Second)
 				r.Accept(op(1))
 			}
 		}()
 	}
 
-	for i := 0; i < 100; i++ {
-		go func() {
-			for {
-				time.Sleep(1 * time.Second)
-				v := r.Reload().(*cowArray)
-				fmt.Printf("%v \n", v.arr)
-			}
-		}()
+	for i := 0; i < 10; i++ {
+		time.Sleep(1 * time.Second)
+		v := r.Reload().(*cowArray)
+		fmt.Printf("%d \n", len(v.arr))
 	}
-
-	time.Sleep(5 * time.Second)
 }
