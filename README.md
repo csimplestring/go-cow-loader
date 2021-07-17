@@ -1,3 +1,6 @@
+[![Go Report Card](https://goreportcard.com/badge/github.com/csimplestring/go-cow-loader)](https://goreportcard.com/report/github.com/csimplestring/go-cow-loader)
+[![GitHub license](https://img.shields.io/github/license/csimplestring/go-cow-loader)](https://github.com/csimplestring/go-cow-loader/blob/master/LICENSE)
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/csimplestring/go-cow-loader)
 # go-copyonwrite-loader
 A simple tiny config loader by using copy-on-write idea.
 
@@ -61,7 +64,7 @@ func main() {
 		go func() {
 			for {
 				time.Sleep(1 * time.Second)
-                // Accept is concurrent-safe, can be used by multiple go-routines
+                		// Accept is concurrent-safe, can be used by multiple go-routines
 				r.Accept(op(1))
 			}
 		}()
@@ -69,7 +72,7 @@ func main() {
 
 	for i := 0; i < 10; i++ {
 		time.Sleep(1 * time.Second)
-        // Reload is concurrent-safe, can be used by multiple go-routines
+       		// Reload is concurrent-safe, can be used by multiple go-routines
 		v := r.Reload().(*cowArray)
 		fmt.Printf("%d \n", len(v.arr))
 	}
